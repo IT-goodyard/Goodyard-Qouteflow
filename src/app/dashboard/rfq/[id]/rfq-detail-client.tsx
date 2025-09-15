@@ -32,6 +32,7 @@ import { convertRMBToUSD } from '@/lib/currency';
 import { formatRMB, formatUSD } from '@/lib/currency';
 import { AbandonQuoteDialog } from '@/components/abandon-quote-dialog';
 import { TranslateButton } from '@/components/translate-button';
+import { translateText } from '@/lib/translate';
 
 const formatFirestoreDate = (date: any): string => {
     if (!date) return 'N/A';
@@ -54,10 +55,14 @@ const formatFirestoreDate = (date: any): string => {
     return 'N/A';
 };
 
+const isChineseText = (text: string): boolean => {
+    return /[\u4e00-\u9fff]/.test(text);
+  };
+
 export default function RFQDetailClient() {
     const params = useParams();
     const router = useRouter();
-    const { t } = useI18n();
+    const { t, language } = useI18n();
     const { user } = useAuth();
     const { toast } = useToast();
     const { createNotification } = useNotifications();
@@ -159,6 +164,29 @@ export default function RFQDetailClient() {
     
         fetchRfq();
     }, [params.id, router, toast]);
+
+    useEffect(() => {
+        if (rfq && language === 'zh') {
+          // Auto-translate all product parameters to Chinese
+          rfq.products.forEach(product => {
+            ['hairFiber', 'cap', 'capSize', 'length', 'density', 'color', 'curlStyle'].forEach(field => {
+              if (product[field] && !isChineseText(product[field])) {
+                translateText(product[field], 'zh').then(result => {
+                  setTranslatedFields(prev => ({
+                    ...prev,
+                    [product.id]: {
+                      ...prev[product.id],
+                      [field]: result.translatedText
+                    }
+                  }));
+                }).catch(error => {
+                  console.error('Auto-translation failed:', error);
+                });
+              }
+            });
+          });
+        }
+      }, [rfq, language]);
 
     const getPurchaser = (purchaserId: string) => users.find(u => u.id === purchaserId);
 
@@ -1171,24 +1199,14 @@ export default function RFQDetailClient() {
                                     </div>
                                     <div>
                                     <span className="text-muted-foreground">{t('field_hair_fiber')}:</span>
-                                    <div className="flex items-center gap-2">
-                                        <p className="font-medium flex-1">
+                                    <div className="space-y-1">
+                                        <p className="font-medium">
                                         {translatedFields[product.id]?.hairFiber || product.hairFiber || 'N/A'}
                                         </p>
-                                        {product.hairFiber && (
-                                        <TranslateButton
-                                            text={product.hairFiber}
-                                            onTranslate={(translatedText) => {
-                                            setTranslatedFields(prev => ({
-                                                ...prev,
-                                                [product.id]: {
-                                                ...prev[product.id],
-                                                hairFiber: translatedText
-                                                }
-                                            }));
-                                            }}
-                                            className="h-6 w-6"
-                                        />
+                                        {product.hairFiber && translatedFields[product.id]?.hairFiber && translatedFields[product.id]?.hairFiber !== product.hairFiber && (
+                                        <p className="text-xs text-muted-foreground">
+                                            原文: {product.hairFiber}
+                                        </p>
                                         )}
                                     </div>
                                     </div>
