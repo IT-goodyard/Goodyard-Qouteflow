@@ -33,6 +33,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { getApp } from 'firebase/app';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { getProductFormConfig, getAvailableProductSeries, type FormField } from '@/lib/product-form-configs';
+import { TranslateButton } from '@/components/translate-button';
 
 type RfqFormValues = z.infer<typeof rfqFormSchema>;
 
@@ -272,13 +273,21 @@ const uploadImages = async (files: File[], rfqId: string, productId: string): Pr
                           {t(fieldConfig.label)}
                         </FormLabel>
                         <FormControl>
-                          <Input 
-                            {...field} 
-                            id={`product-${index}-${fieldConfig.name}`}
-                            value={field.value || ''}
-                            placeholder={fieldConfig.placeholder}
-                            className="placeholder:text-muted-foreground/60"
-                          />
+                          <div className="flex gap-2">
+                            <Input 
+                              {...field} 
+                              id={`product-${index}-${fieldConfig.name}`}
+                              value={field.value || ''}
+                              placeholder={fieldConfig.placeholder}
+                              className="placeholder:text-muted-foreground/60 flex-1"
+                            />
+                            <TranslateButton
+                              text={field.value || ''}
+                              onTranslate={(translatedText) => {
+                                field.onChange(translatedText);
+                              }}
+                            />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

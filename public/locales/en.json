@@ -116,5 +116,17 @@
     "field_customer_type": "Customer Type",
     "field_customer_email": "Customer Email", 
     "field_total_quote_value": "Total Quote Value",
-    "by_purchaser": "By"
-}
+    "by_purchaser": "By",
+    "close_rfq": "Close RFQ",
+    "close_rfq_dialog_title": "Close RFQ",
+    "close_rfq_dialog_description": "Are you sure you want to close this RFQ? This action cannot be undone and will mark the RFQ as completed without quotes.",
+    "confirm_close": "Close RFQ",
+    "rfq_closed": "RFQ Closed",
+    "rfq_closed_description": "The RFQ has been closed successfully.",
+    "action_rfq_closed": "RFQ Closed",
+    "header_status": "Status",
+    "header_quotes": "Quotes",
+    "header_last_updated": "Last Updated", 
+    "header_creator": "Creator",
+    "header_actions": "Actions"
+    }

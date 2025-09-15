@@ -12,6 +12,7 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { Product, Quote } from '@/lib/types';
 import { convertRMBToUSD, formatRMB, formatUSD } from '@/lib/currency';
+import { TranslateButton } from '@/components/translate-button';
 
 interface QuoteDialogProps {
   children: React.ReactNode;
@@ -127,23 +128,31 @@ export function QuoteDialog({ children, product, userQuote, onQuoteSubmit }: Quo
               </div>
             </div>
             <div className="grid grid-cols-4 items-start gap-4">
-            <Label htmlFor="message" className="text-right pt-2">
-              Message
-            </Label>
-            <div className="col-span-3 space-y-2">
-              <textarea
-                id="message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                placeholder="Add operational notes about this quote (optional)"
-                maxLength={300}
-              />
-              <div className="text-xs text-muted-foreground text-right">
-                {message.length}/300 characters
+              <Label htmlFor="message" className="text-right pt-2">
+                Message
+              </Label>
+              <div className="col-span-3 space-y-2">
+                <div className="flex gap-2">
+                  <textarea
+                    id="message"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    placeholder="Add operational notes about this quote (optional)"
+                    maxLength={300}
+                  />
+                  <div className="flex-shrink-0 pt-1">
+                    <TranslateButton
+                      text={message}
+                      onTranslate={(translatedText) => setMessage(translatedText)}
+                    />
+                  </div>
+                </div>
+                <div className="text-xs text-muted-foreground text-right">
+                  {message.length}/300 characters
+                </div>
               </div>
             </div>
-          </div>
           </div>
 
           <DialogFooter>

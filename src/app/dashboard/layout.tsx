@@ -1,4 +1,3 @@
-
 "use client";
 import { useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
@@ -15,7 +14,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { MainNav } from "@/components/main-nav";
 import { UserNav } from "@/components/user-nav";
 import { Button } from "@/components/ui/button";
-import { Workflow } from "lucide-react";
+import { Workflow, Menu } from "lucide-react";
 import { NotificationBell } from "@/components/notification-bell";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
@@ -37,14 +36,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <SidebarProvider>
-      <Sidebar>
+    <SidebarProvider defaultOpen={true}>
+      <Sidebar variant="inset" collapsible="icon">
         <SidebarHeader>
           <div className="flex items-center gap-2 p-2">
-            <div className="bg-primary text-primary-foreground rounded-lg p-2">
+            <div className="bg-primary text-primary-foreground rounded-lg p-2 flex-shrink-0">
                 <Workflow className="h-6 w-6" />
             </div>
-            <span className="text-lg font-semibold text-sidebar-foreground">QuoteFlow</span>
+            <span className="text-lg font-semibold text-sidebar-foreground group-data-[collapsible=icon]:hidden">
+              QuoteFlow
+            </span>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -53,13 +54,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <SidebarFooter/>
       </Sidebar>
       <SidebarInset>
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-            <SidebarTrigger className="md:hidden" />
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 sm:px-6">
+            <SidebarTrigger className="flex-shrink-0">
+              <Menu className="h-4 w-4" />
+              <span className="sr-only">Toggle Sidebar</span>
+            </SidebarTrigger>
             <div className="flex-1" />
             <NotificationBell />
             <UserNav />
         </header>
-        <main className="flex-1 p-4 sm:p-6">
+        <main className="flex-1 p-4 sm:p-6 transition-all duration-300 ease-in-out">
             {children}
         </main>
       </SidebarInset>

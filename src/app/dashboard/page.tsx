@@ -15,7 +15,7 @@ import type { RFQ, RFQStatus, User } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Lock, Unlock } from 'lucide-react';
+import { Lock, Unlock,X } from 'lucide-react';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
@@ -174,6 +174,52 @@ export default function DashboardPage() {
         }
     };   
 
+    const handleCloseRfq = async (rfq: RFQ) => {
+        if (!user || user.role !== 'Sales' || rfq.creatorId !== user.id) return;
+        if (rfq.status !== 'Waiting for Quote') return;
+    
+        try {
+            const rfqRef = doc(db, 'rfqs', rfq.id);
+            
+            const updates = {
+                status: 'Archived' as RFQStatus,
+                archivedAt: serverTimestamp(),
+                archivedBy: user.id,
+                archiveReason: 'Closed by Sales - No quotes needed',
+                lastUpdatedTime: serverTimestamp()
+            };
+    
+            await updateDoc(rfqRef, updates);
+    
+            // Update local state - remove from current list since it's now archived
+            setRfqs(prev => prev.filter(r => r.id !== rfq.id));
+    
+            // Add to action history
+            await addActionHistory(
+                rfq.id,
+                'rfq_closed',
+                {
+                    previousStatus: rfq.status,
+                    newStatus: 'Archived',
+                    reason: 'Closed by Sales - No quotes needed'
+                }
+            );
+    
+            toast({
+                title: t('rfq_closed'),
+                description: t('rfq_closed_description'),
+            });
+    
+        } catch (error) {
+            console.error('Error closing RFQ:', error);
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Failed to close RFQ. Please try again.",
+            });
+        }
+    };
+
     // Add this function after formatFirestoreDate
     const getTimestampForSorting = (dateField: any): number => {
         try {
@@ -301,6 +347,8 @@ export default function DashboardPage() {
             case 'Locked': return 'destructive';
             case 'Quotation in Progress': return 'default';
             case 'Quotation Completed': return 'outline';
+            case 'Abandoned': return 'destructive';
+            case 'Closed': return 'secondary';
             case 'Archived': return 'destructive';
             default: return 'secondary';
         }
@@ -389,14 +437,14 @@ export default function DashboardPage() {
                 <TableHeader>
                     <TableRow>
                         <TableHead>{t('field_label_code')}</TableHead>
-                        <TableHead>Status</TableHead>
+                        <TableHead>{t('header_status')}</TableHead>
                         <TableHead>{t('field_customer_type')}</TableHead>
                         <TableHead>{t('field_customer_email')}</TableHead>
-                        <TableHead>Quotes</TableHead>
+                        <TableHead>{t('header_quotes')}</TableHead>
                         <TableHead>{t('field_label_inquiry_time')}</TableHead>
-                        <TableHead>Last Updated</TableHead>
-                        <TableHead>Creator</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                        <TableHead>{t('header_last_updated')}</TableHead>
+                        <TableHead>{t('header_creator')}</TableHead>
+                        <TableHead className="text-right">{t('header_actions')}</TableHead>
                     </TableRow>
                 </TableHeader>
                     <TableBody>
@@ -463,6 +511,17 @@ export default function DashboardPage() {
                                                     ) : (
                                                         <Lock className="h-4 w-4 text-orange-600" />
                                                     )}
+                                                </Button>
+                                            )}
+                                            {user?.role === 'Sales' && rfq.creatorId === user.id && rfq.status === 'Waiting for Quote' && (
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => handleCloseRfq(rfq)}
+                                                    title={t('close_rfq')}
+                                                    className="text-orange-600 hover:text-orange-700"
+                                                >
+                                                    <X className="h-4 w-4" />
                                                 </Button>
                                             )}
                                             <Button variant="ghost" size="icon" onClick={() => router.push(`/dashboard/rfq/${rfq.id}`)}>

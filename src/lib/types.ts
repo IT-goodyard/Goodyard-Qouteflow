@@ -19,11 +19,8 @@ export interface User {
   updatedAt?: string; // When the user was last updated
 }
 
-export type RFQStatus = 'Waiting for Quote' | 'Locked' | 'Quotation in Progress' | 'Quotation Completed' | 'Archived';
-
+export type RFQStatus = 'Waiting for Quote' | 'Locked' | 'Quotation in Progress' | 'Quotation Completed' | 'Abandoned' | 'Closed' | 'Archived';
 export type ProductSeries = 'Synthetic Product' | 'Wig' | 'Hair Extension' | 'Topper' | 'Toupee';
-
-export type RFQStatus = 'Waiting for Quote' | 'Locked' | 'Quotation in Progress' | 'Quotation Completed' | 'Abandoned' | 'Archived';
 
 export interface Product {
   id: string;

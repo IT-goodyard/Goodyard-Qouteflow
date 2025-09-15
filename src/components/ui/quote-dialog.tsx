@@ -1,4 +1,3 @@
-// src/components/ui/quote-dialog.tsx
 "use client";
 
 import * as React from "react";
@@ -36,8 +35,8 @@ export function QuoteDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (price && deliveryDate) {
-      onSubmit(Number(price), deliveryDate);
+    if (price) {
+      onSubmit(Number(price), new Date()); 
       onOpenChange(false);
     }
   };
@@ -51,46 +50,30 @@ export function QuoteDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
+          <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="price" className="text-right">
-                Price
+                Price (RMB)
               </Label>
-              <Input
-                id="price"
-                type="number"
-                step="0.01"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className="col-span-3"
-                placeholder="0.00"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Delivery Date</Label>
               <div className="col-span-3">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !deliveryDate && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {deliveryDate ? format(deliveryDate, "PPP") : <span>Pick a date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={deliveryDate}
-                      onSelect={setDeliveryDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <Input
+                  id="price"
+                  type="number"
+                  step="0.01"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="0.00"
+                  required
+                />
+                {price && !isNaN(Number(price)) && Number(price) > 0 && (
+                  <div className="text-xs space-y-1 mt-2">
+                    <div className="font-medium text-blue-600 text-sm">
+                      ≈ ${(Number(price) / 7.25).toFixed(2)} USD
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Exchange rate: 1 RMB = 0.138 USD (1:7.25)
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -116,5 +116,17 @@
     "field_customer_type": "客户类型",
     "field_customer_email": "客户邮箱",
     "field_total_quote_value": "报价总值",
-    "by_purchaser": "由"
+    "by_purchaser": "由",
+    "close_rfq": "关闭询价",
+    "close_rfq_dialog_title": "关闭询价",
+    "close_rfq_dialog_description": "您确定要关闭此询价吗？此操作无法撤销，将标记询价为已完成但无报价。",
+    "confirm_close": "关闭询价",
+    "rfq_closed": "询价已关闭",
+    "rfq_closed_description": "询价已成功关闭。",
+    "action_rfq_closed": "询价已关闭",
+    "header_status": "状态",
+    "header_quotes": "报价", 
+    "header_last_updated": "最后更新",
+    "header_creator": "创建者",
+    "header_actions": "操作"
 }

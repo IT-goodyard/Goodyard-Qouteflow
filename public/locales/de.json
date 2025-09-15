@@ -60,5 +60,10 @@
     "notification_quote_submitted_title": "Neues Angebot erhalten",
     "notification_quote_submitted_body": "{purchaserName} hat ein Angebot für Anfrage {rfqCode} abgegeben.",
     "notification_quote_updated_title": "Angebot aktualisiert",
-    "notification_quote_updated_body": "{purchaserName} hat sein Angebot für Anfrage {rfqCode} aktualisiert."
+    "notification_quote_updated_body": "{purchaserName} hat sein Angebot für Anfrage {rfqCode} aktualisiert.",
+    "header_status": "Status",
+    "header_quotes": "Angebote",
+    "header_last_updated": "Zuletzt aktualisiert",
+    "header_creator": "Ersteller", 
+    "header_actions": "Aktionen"
 }

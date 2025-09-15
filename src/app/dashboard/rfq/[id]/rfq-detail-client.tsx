@@ -31,6 +31,7 @@ import { useNotifications } from '@/hooks/use-notifications';
 import { convertRMBToUSD } from '@/lib/currency';
 import { formatRMB, formatUSD } from '@/lib/currency';
 import { AbandonQuoteDialog } from '@/components/abandon-quote-dialog';
+import { TranslateButton } from '@/components/translate-button';
 
 const formatFirestoreDate = (date: any): string => {
     if (!date) return 'N/A';
@@ -70,6 +71,7 @@ export default function RFQDetailClient() {
     const [editFormData, setEditFormData] = useState<any>(null);
     const [purchasingUsers, setPurchasingUsers] = useState<any[]>([]);
     const [editingImages, setEditingImages] = useState<{[productIndex: number]: {existing: string[], new: File[]}}>({});
+    const [translatedFields, setTranslatedFields] = useState<{[productId: string]: {[fieldName: string]: string}}>({});
 
     const editForm = useForm({
         resolver: zodResolver(rfqFormSchema),
@@ -1146,51 +1148,198 @@ export default function RFQDetailClient() {
                                         </div>
                                     )}
 
-                                    <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm mb-6">
+                                <div className="grid grid-cols-1 gap-y-4 text-sm mb-6">
+                                <div className="grid grid-cols-2 gap-x-8">
                                     <div>
-                                        <span className="text-muted-foreground">{t('field_product_series')}:</span>
-                                        <p className="font-medium">{product.productSeries}</p>
+                                    <span className="text-muted-foreground">{t('field_product_series')}:</span>
+                                    <p className="font-medium">{product.productSeries}</p>
                                     </div>
                                     <div>
-                                        <span className="text-muted-foreground">{t('field_sku')}:</span>
-                                        <p className="font-medium">{product.sku || 'N/A'}</p>
+                                    <span className="text-muted-foreground">{t('field_sku')}:</span>
+                                    <p className="font-medium">{product.sku || 'N/A'}</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="grid grid-cols-2 gap-x-8">
+                                    <div>
+                                    <span className={`text-muted-foreground ${(product.quantity || 1) > 1 ? 'font-bold text-red-600' : ''}`}>
+                                        {t('field_quantity')}:
+                                    </span>
+                                    <p className={`font-medium ${(product.quantity || 1) > 1 ? 'font-bold text-red-600' : ''}`}>
+                                        {product.quantity || 1}
+                                    </p>
                                     </div>
                                     <div>
-                                        <span className={`text-muted-foreground ${(product.quantity || 1) > 1 ? 'font-bold text-red-600' : ''}`}>
-                                            {t('field_quantity')}:
-                                        </span>
-                                        <p className={`font-medium ${(product.quantity || 1) > 1 ? 'font-bold text-red-600' : ''}`}>
-                                            {product.quantity || 1}
+                                    <span className="text-muted-foreground">{t('field_hair_fiber')}:</span>
+                                    <div className="flex items-center gap-2">
+                                        <p className="font-medium flex-1">
+                                        {translatedFields[product.id]?.hairFiber || product.hairFiber || 'N/A'}
                                         </p>
+                                        {product.hairFiber && (
+                                        <TranslateButton
+                                            text={product.hairFiber}
+                                            onTranslate={(translatedText) => {
+                                            setTranslatedFields(prev => ({
+                                                ...prev,
+                                                [product.id]: {
+                                                ...prev[product.id],
+                                                hairFiber: translatedText
+                                                }
+                                            }));
+                                            }}
+                                            className="h-6 w-6"
+                                        />
+                                        )}
+                                    </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-x-8">
+                                    <div>
+                                    <span className="text-muted-foreground">{t('field_cap')}:</span>
+                                    <div className="flex items-center gap-2">
+                                        <p className="font-medium flex-1">
+                                        {translatedFields[product.id]?.cap || product.cap || 'N/A'}
+                                        </p>
+                                        {product.cap && (
+                                        <TranslateButton
+                                            text={product.cap}
+                                            onTranslate={(translatedText) => {
+                                            setTranslatedFields(prev => ({
+                                                ...prev,
+                                                [product.id]: {
+                                                ...prev[product.id],
+                                                cap: translatedText
+                                                }
+                                            }));
+                                            }}
+                                            className="h-6 w-6"
+                                        />
+                                        )}
+                                    </div>
                                     </div>
                                     <div>
-                                        <span className="text-muted-foreground">{t('field_hair_fiber')}:</span>
-                                        <p className="font-medium">{product.hairFiber || 'N/A'}</p>
+                                    <span className="text-muted-foreground">{t('field_cap_size')}:</span>
+                                    <div className="flex items-center gap-2">
+                                        <p className="font-medium flex-1">
+                                        {translatedFields[product.id]?.capSize || product.capSize || 'N/A'}
+                                        </p>
+                                        {product.capSize && (
+                                        <TranslateButton
+                                            text={product.capSize}
+                                            onTranslate={(translatedText) => {
+                                            setTranslatedFields(prev => ({
+                                                ...prev,
+                                                [product.id]: {
+                                                ...prev[product.id],
+                                                capSize: translatedText
+                                                }
+                                            }));
+                                            }}
+                                            className="h-6 w-6"
+                                        />
+                                        )}
+                                    </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-x-8">
+                                    <div>
+                                    <span className="text-muted-foreground">{t('field_length')}:</span>
+                                    <div className="flex items-center gap-2">
+                                        <p className="font-medium flex-1">
+                                        {translatedFields[product.id]?.length || product.length || 'N/A'}
+                                        </p>
+                                        {product.length && (
+                                        <TranslateButton
+                                            text={product.length}
+                                            onTranslate={(translatedText) => {
+                                            setTranslatedFields(prev => ({
+                                                ...prev,
+                                                [product.id]: {
+                                                ...prev[product.id],
+                                                length: translatedText
+                                                }
+                                            }));
+                                            }}
+                                            className="h-6 w-6"
+                                        />
+                                        )}
+                                    </div>
                                     </div>
                                     <div>
-                                        <span className="text-muted-foreground">{t('field_cap')}:</span>
-                                        <p className="font-medium">{product.cap || 'N/A'}</p>
+                                    <span className="text-muted-foreground">{t('field_density')}:</span>
+                                    <div className="flex items-center gap-2">
+                                        <p className="font-medium flex-1">
+                                        {translatedFields[product.id]?.density || product.density || 'N/A'}
+                                        </p>
+                                        {product.density && (
+                                        <TranslateButton
+                                            text={product.density}
+                                            onTranslate={(translatedText) => {
+                                            setTranslatedFields(prev => ({
+                                                ...prev,
+                                                [product.id]: {
+                                                ...prev[product.id],
+                                                density: translatedText
+                                                }
+                                            }));
+                                            }}
+                                            className="h-6 w-6"
+                                        />
+                                        )}
+                                    </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-x-8">
+                                    <div>
+                                    <span className="text-muted-foreground">{t('field_color')}:</span>
+                                    <div className="flex items-center gap-2">
+                                        <p className="font-medium flex-1">
+                                        {translatedFields[product.id]?.color || product.color || 'N/A'}
+                                        </p>
+                                        {product.color && (
+                                        <TranslateButton
+                                            text={product.color}
+                                            onTranslate={(translatedText) => {
+                                            setTranslatedFields(prev => ({
+                                                ...prev,
+                                                [product.id]: {
+                                                ...prev[product.id],
+                                                color: translatedText
+                                                }
+                                            }));
+                                            }}
+                                            className="h-6 w-6"
+                                        />
+                                        )}
+                                    </div>
                                     </div>
                                     <div>
-                                        <span className="text-muted-foreground">{t('field_cap_size')}:</span>
-                                        <p className="font-medium">{product.capSize || 'N/A'}</p>
+                                    <span className="text-muted-foreground">{t('field_curl_style')}:</span>
+                                    <div className="flex items-center gap-2">
+                                        <p className="font-medium flex-1">
+                                        {translatedFields[product.id]?.curlStyle || product.curlStyle || 'N/A'}
+                                        </p>
+                                        {product.curlStyle && (
+                                        <TranslateButton
+                                            text={product.curlStyle}
+                                            onTranslate={(translatedText) => {
+                                            setTranslatedFields(prev => ({
+                                                ...prev,
+                                                [product.id]: {
+                                                ...prev[product.id],
+                                                curlStyle: translatedText
+                                                }
+                                            }));
+                                            }}
+                                            className="h-6 w-6"
+                                        />
+                                        )}
                                     </div>
-                                    <div>
-                                        <span className="text-muted-foreground">{t('field_length')}:</span>
-                                        <p className="font-medium">{product.length || 'N/A'}</p>
                                     </div>
-                                    <div>
-                                        <span className="text-muted-foreground">{t('field_density')}:</span>
-                                        <p className="font-medium">{product.density || 'N/A'}</p>
-                                    </div>
-                                    <div>
-                                        <span className="text-muted-foreground">{t('field_color')}:</span>
-                                        <p className="font-medium">{product.color || 'N/A'}</p>
-                                    </div>
-                                    <div>
-                                        <span className="text-muted-foreground">{t('field_curl_style')}:</span>
-                                        <p className="font-medium">{product.curlStyle || 'N/A'}</p>
-                                    </div>
+                                </div>
                                 </div>
                                     
                                     {/* Product Images Display */}
@@ -1249,19 +1398,13 @@ export default function RFQDetailClient() {
                                                     </div>
                                                 </div>
                                                 <div className="text-right">
-                                                    {quote.status === 'Abandoned' ? (
-                                                        <p className="text-lg font-bold text-orange-600">Quote Abandoned</p>
-                                                    ) : (
-                                                        <>
-                                                            <p className="text-lg font-bold">{quote.price ? formatRMB(quote.price) : 'N/A'}</p>
-                                                            {quote.priceUSD && (
-                                                                <p className="text-sm text-muted-foreground">≈ {formatUSD(quote.priceUSD)}</p>
-                                                            )}
-                                                            <p className="text-xs text-muted-foreground">
-                                                                Delivery: {new Date(quote.deliveryDate).toLocaleDateString()}
-                                                            </p>
-                                                        </>
-                                                    )}
+                                                {quote.status === 'Abandoned' ? (
+                                                    <p className="text-lg font-bold text-orange-600">Quote Abandoned</p>
+                                                ) : (
+                                                    <p className="text-lg font-bold text-blue-600">
+                                                    {quote.priceUSD ? formatUSD(quote.priceUSD) : (quote.price ? `$${(quote.price / 7.25).toFixed(2)}` : 'N/A')}
+                                                    </p>
+                                                )}
                                                 </div>
                                                 </div>
                                                 
