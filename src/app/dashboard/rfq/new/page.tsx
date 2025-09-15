@@ -273,22 +273,41 @@ const uploadImages = async (files: File[], rfqId: string, productId: string): Pr
                           {t(fieldConfig.label)}
                         </FormLabel>
                         <FormControl>
-                          <div className="flex gap-2">
-                            <Input 
-                              {...field} 
-                              id={`product-${index}-${fieldConfig.name}`}
-                              value={field.value || ''}
-                              placeholder={fieldConfig.placeholder}
-                              className="placeholder:text-muted-foreground/60 flex-1"
-                            />
-                            <TranslateButton
-                              text={field.value || ''}
-                              onTranslate={(translatedText) => {
-                                field.onChange(translatedText);
-                              }}
-                            />
-                          </div>
-                        </FormControl>
+                            <div className="flex gap-2">
+                              {fieldConfig.type === 'textarea' ? (
+                                <div className="flex-1 space-y-2">
+                                  <textarea
+                                    {...field}
+                                    id={`product-${index}-${fieldConfig.name}`}
+                                    value={field.value || ''}
+                                    placeholder={fieldConfig.placeholder}
+                                    className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-vertical"
+                                    rows={4}
+                                    maxLength={500}
+                                  />
+                                  <div className="text-xs text-muted-foreground text-right">
+                                    {(field.value || '').length}/500 characters
+                                  </div>
+                                </div>
+                              ) : (
+                                <Input 
+                                  {...field} 
+                                  id={`product-${index}-${fieldConfig.name}`}
+                                  value={field.value || ''}
+                                  placeholder={fieldConfig.placeholder}
+                                  className="placeholder:text-muted-foreground/60 flex-1"
+                                />
+                              )}
+                              <div className="flex-shrink-0 pt-1">
+                                <TranslateButton
+                                  text={field.value || ''}
+                                  onTranslate={(translatedText) => {
+                                    field.onChange(translatedText);
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </FormControl>
                         <FormMessage />
                       </FormItem>
                     )} 

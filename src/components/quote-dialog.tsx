@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import type { Product, Quote } from '@/lib/types';
 import { convertRMBToUSD, formatRMB, formatUSD } from '@/lib/currency';
 import { TranslateButton } from '@/components/translate-button';
+import { useI18n } from '@/hooks/use-i18n';
 
 interface QuoteDialogProps {
   children: React.ReactNode;
@@ -29,6 +30,8 @@ export function QuoteDialog({ children, product, userQuote, onQuoteSubmit }: Quo
   );
   const [message, setMessage] = useState(userQuote?.notes || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useI18n();
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,19 +69,19 @@ export function QuoteDialog({ children, product, userQuote, onQuoteSubmit }: Quo
         {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>
-            {userQuote ? 'Update Your Quote' : 'Submit Your Quote'}
-          </DialogTitle>
-          <DialogDescription>
-          Enter your price in RMB and delivery date for <strong>{product.sku}</strong> ({product.wlid}).
-          </DialogDescription>
-        </DialogHeader>
+      <DialogHeader>
+        <DialogTitle>
+          {userQuote ? t('update_your_quote') : t('submit_your_quote')}
+        </DialogTitle>
+        <DialogDescription>
+          {t('enter_price_and_delivery_description')} <strong>{product.sku}</strong> ({product.wlid}).
+        </DialogDescription>
+      </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="price" className="text-right">
-                Price (RMB)
+              {t('price_rmb')}
               </Label>
               <div className="col-span-3">
                 <Input
@@ -89,7 +92,7 @@ export function QuoteDialog({ children, product, userQuote, onQuoteSubmit }: Quo
                   onChange={(e) => setPrice(e.target.value)}
                   className="mb-2"
                   placeholder="0.00"
-                  placeholder="Enter price in RMB"
+                  placeholder={t('enter_price_rmb')}
                   required
                 />
                 {price && !isNaN(Number(price)) && Number(price) > 0 && (
@@ -100,7 +103,7 @@ export function QuoteDialog({ children, product, userQuote, onQuoteSubmit }: Quo
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Delivery Date</Label>
+            <Label className="text-right">{t('delivery_date')}</Label>
               <div className="col-span-3">
                 <Popover>
                   <PopoverTrigger asChild>
@@ -112,7 +115,7 @@ export function QuoteDialog({ children, product, userQuote, onQuoteSubmit }: Quo
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {deliveryDate ? format(deliveryDate, "PPP") : <span>Pick a date</span>}
+                      {deliveryDate ? format(deliveryDate, "PPP") : <span>{t('pick_date')}</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -128,9 +131,9 @@ export function QuoteDialog({ children, product, userQuote, onQuoteSubmit }: Quo
               </div>
             </div>
             <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="message" className="text-right pt-2">
-                Message
-              </Label>
+            <Label htmlFor="message" className="text-right pt-2">
+              {t('message')}
+            </Label>
               <div className="col-span-3 space-y-2">
                 <div className="flex gap-2">
                   <textarea
@@ -138,7 +141,7 @@ export function QuoteDialog({ children, product, userQuote, onQuoteSubmit }: Quo
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    placeholder="Add operational notes about this quote (optional)"
+                    placeholder={t('add_operational_notes')}
                     maxLength={300}
                   />
                   <div className="flex-shrink-0 pt-1">
@@ -149,7 +152,7 @@ export function QuoteDialog({ children, product, userQuote, onQuoteSubmit }: Quo
                   </div>
                 </div>
                 <div className="text-xs text-muted-foreground text-right">
-                  {message.length}/300 characters
+                {message.length}/300 {t('characters')}
                 </div>
               </div>
             </div>
@@ -157,10 +160,10 @@ export function QuoteDialog({ children, product, userQuote, onQuoteSubmit }: Quo
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-              Cancel
+            {t('cancel')}
             </Button>
             <Button type="submit" disabled={isSubmitting || !price || !deliveryDate}>
-              {isSubmitting ? 'Submitting...' : (userQuote ? 'Update Quote' : 'Submit Quote (RMB)')}
+              {isSubmitting ? t('submitting') : (userQuote ? t('update_quote') : t('submit_quote_rmb'))}
             </Button>
           </DialogFooter>
         </form>

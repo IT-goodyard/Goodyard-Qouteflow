@@ -1,11 +1,10 @@
-// src/lib/product-form-configs.ts
 import { z } from 'zod';
 import type { ProductSeries } from './types';
 
 export interface FormField {
   name: string;
   label: string;
-  type: 'text' | 'select' | 'number';
+  type: 'text' | 'select' | 'number' | 'textarea';
   required: boolean;
   options?: string[];
   placeholder?: string;
@@ -33,25 +32,17 @@ export const PRODUCT_FORM_CONFIGS: Record<string, ProductFormConfig> = {
         { name: 'length', label: 'field_length', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
         { name: 'density', label: 'field_density', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
         { name: 'color', label: 'field_color', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
-        { name: 'curlStyle', label: 'field_curl_style', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' }
+        { name: 'layers', label: 'field_layers', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
+        { name: 'hairBangs', label: 'field_hair_bangs', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
+        { name: 'curlStyle', label: 'field_curl_style', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
+        { name: 'specialNotes', label: 'field_special_notes', type: 'textarea', required: false, placeholder: 'Enter any special requirements or additional details...' }
       ],
-    /*
-    schema: z.object({
-      sku: z.string().min(1, 'SKU is required'),
-      hairFiber: z.string().min(1, 'Hair Fiber is required'),
-      wigCapConstruction: z.string().min(1, 'Wig Cap Construction is required'),
-      capSize: z.string().min(1, 'Cap Size is required'),
-      length: z.string().min(1, 'Length is required'),
-      density: z.string().min(1, 'Hair Density is required'),
-      color: z.string().min(1, 'Color is required'),
-      curlStyle: z.string().min(1, 'Curl Style is required'),
-    })
-    */
+    schema: z.object({})
   },
 
   'Topper': {
-    series: 'Topper',
-    fields: [
+      series: 'Topper',
+      fields: [
         { name: 'sku', label: 'field_sku', type: 'text', required: true, placeholder: 'No such parameter, please fill in /' },
         { name: 'hairFiber', label: 'field_hair_fiber', type: 'select', required: false,
           options: ['Human Hair', 'Heat Friendly Synthetic', 'Synthetic Fiber'] },
@@ -61,21 +52,15 @@ export const PRODUCT_FORM_CONFIGS: Record<string, ProductFormConfig> = {
         { name: 'length', label: 'field_length', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
         { name: 'density', label: 'field_density', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
         { name: 'color', label: 'field_color', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
-        { name: 'curlStyle', label: 'field_style', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' }
+        { name: 'hairTexture', label: 'field_hair_texture', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
+        { name: 'hairPart', label: 'field_hair_part', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
+        { name: 'layers', label: 'field_layers', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
+        { name: 'hairBangs', label: 'field_hair_bangs', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
+        { name: 'curlStyle', label: 'field_style', type: 'text', required: false, placeholder: 'No such parameter, please fill in /' },
+        { name: 'specialNotes', label: 'field_special_notes', type: 'textarea', required: false, placeholder: 'Enter any special requirements or additional details...' }
       ],
-    /*
-    schema: z.object({
-      sku: z.string().min(1, 'SKU is required'),
-      hairFiber: z.string().min(1, 'Hair Fiber is required'),
-      cap: z.string().min(1, 'Base Construction is required'),
-      baseSize: z.string().min(1, 'Base Size is required'),
-      length: z.string().min(1, 'Length is required'),
-      density: z.string().min(1, 'Hair Density is required'),
-      color: z.string().min(1, 'Color is required'),
-      curlStyle: z.string().min(1, 'Curl Style is required'),
-    })
-    */
-  }
+      schema: z.object({})
+    }
 };
 
 // Helper functions
